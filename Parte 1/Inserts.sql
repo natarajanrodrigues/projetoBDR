@@ -5,3 +5,4 @@ INSERT INTO PESSOA VALUES('44444444444','444444444','Antônia','F','12/02/1982',
 INSERT INTO PESSOA VALUES('55555555555','555555555','Maria','F','08/05/1968','Ceará','Fortaleza','Cormecial','Principal',1078);
 INSERT INTO PESSOA VALUES('66666666666','666666666','Lucas','M','14/09/1991','Rio Grande do Norte','Natal','Lagoa Nova','',231);
 INSERT INTO PESSOA VALUES('77777777777','777777777','Fernanda','F','02/02/1992','Paraíba','João Pessoa','Bessa','Avenida Presidente Afonso Pena',791);
+INSERT INTO PESSOA VALUES('88888888888','123456789','Natarajan','M','28/03/1984','Paraíba','Sousa','Centro','Rua Cel José Gomes de Sá',7);
