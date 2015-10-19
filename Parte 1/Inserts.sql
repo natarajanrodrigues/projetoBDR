@@ -60,3 +60,12 @@ INSERT INTO DEPENDENTE VALUES('15151515151','44444444444',30);
 INSERT INTO DEPENDENTE VALUES('16161616161','77777777777',20);
 INSERT INTO DEPENDENTE VALUES('18181818181','55555555555',14);
 INSERT INTO DEPENDENTE VALUES('17171717171','99999999999',19);
+
+--TABLE DEPARTAMENTO Inserts
+INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Tudo relacionado a informática','informática e tablets');
+INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Todos os celulares e telefones que você deseja encontrar','Celulares e telefonia fixa');
+INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Tudo relacionado a eletrodomésticos','eletrodomésticos');
+INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Todo tipo de brinquedo que você deseja encontrar','Brinquedos e Bebê');
+INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Livros, cadernos, lapis, etc','Livros e papelaria');
+
+
