@@ -65,7 +65,28 @@ INSERT INTO DEPENDENTE VALUES('17171717171','99999999999',19);
 INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Tudo relacionado a informática','informática e tablets');
 INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Todos os celulares e telefones que você deseja encontrar','Celulares e telefonia fixa');
 INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Tudo relacionado a eletrodomésticos','eletrodomésticos');
-INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Todo tipo de brinquedo que você deseja encontrar','Brinquedos e Bebê');
-INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Livros, cadernos, lapis, etc','Livros e papelaria');
+INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Televisões, home theaters, etc','Televisões, audio e home theaters');
+INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Camas, Sofás, mesas, cozinha, etc','Móveis e Decoração');
+
+--TABLE FORNECEDOR Inserts
+INSERT INTO FORNECEDOR('62.288.584/0001-08','Motorola','Lucro real','São Paulo','São Paulo','São Paulo','Vila Olímpia','Rua Paes Leme',525);
+INSERT INTO FORNECEDOR('09.509.531/0009-36','ASUS','Lucro real','São Paulo','São Paulo','São Paulo','CAJAMAR','Via de Acesso Norte KM 38',420);
+INSERT INTO FORNECEDOR('62.058.318/0007-76','Consul','Lucro real','São Paulo','São Paulo','São Paulo','Jardim Santa Emília','Rua Olympia Semeraro',675);
+INSERT INTO FORNECEDOR('61.086.336/0004-56','Philips','Lucro real','São Paulo','São Paulo','São Paulo','MAUÁ','Av. Comendador wolthers',500);
+INSERT INTO FORNECEDOR('02.895.152/0001-25','Ortobom','Lucro real','Rio de Janeiro','Nova Iguaçu','Rio de Janeiro','Vila Três Corações','Av. Henrique Duque Estrada Mayer',1701);
+
+--TABLE TELEFONE-FORNECEDOR Inserts
+INSERT INTO TELEFONE_FORNECEDOR('62.288.584/0001-08','4003-8859');
+INSERT INTO TELEFONE_FORNECEDOR('09.509.531/0009-36','3003-0398');
+INSERT INTO TELEFONE_FORNECEDOR('62.058.318/0007-76','3003-0777');
+INSERT INTO TELEFONE_FORNECEDOR('61.086.336/0004-56','2121-0203');
+INSERT INTO TELEFONE_FORNECEDOR('02.895.152/0001-25','2221-1436');
+
+
+
+
+
+
+
 
 
