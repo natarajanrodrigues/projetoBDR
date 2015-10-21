@@ -66,11 +66,11 @@ INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('1818181818
 INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('17171717171', 'F0002');
 
 --TABLE DEPARTAMENTO Inserts
-INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Tudo relacionado a informática','informática e tablets');
-INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Todos os celulares e telefones que você deseja encontrar','Celulares e telefonia fixa');
-INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Tudo relacionado a eletrodomésticos','eletrodomésticos');
-INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Televisões, home theaters, etc','Televisões, audio e home theaters');
-INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Camas, Sofás, mesas, cozinha, etc','Móveis e Decoração');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-001','Tudo relacionado a informática','informática e tablets');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-002','Todos os celulares e telefones que você deseja encontrar','Celulares e telefonia fixa');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-003','Tudo relacionado a eletrodomésticos','eletrodomésticos');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-004','Televisões, home theaters, etc','Televisões, audio e home theaters');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-005','Camas, Sofás, mesas, cozinha, etc','Móveis e Decoração');
 
 --TABLE FORNECEDOR Inserts
 INSERT INTO FORNECEDOR VALUES('62.288.584/0001-08','Motorola','Lucro real','São Paulo','São Paulo','São Paulo','Vila Olímpia','Rua Paes Leme',525);
