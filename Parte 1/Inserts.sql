@@ -66,18 +66,20 @@ INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('1818181818
 INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('17171717171', 'F0002');
 
 --TABLE DEPARTAMENTO Inserts
-INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-001','Tudo relacionado a informática','informática e tablets');
-INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-002','Todos os celulares e telefones que você deseja encontrar','Celulares e telefonia fixa');
-INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-003','Tudo relacionado a eletrodomésticos','eletrodomésticos');
-INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-004','Televisões, home theaters, etc','Televisões, audio e home theaters');
-INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP-005','Camas, Sofás, mesas, cozinha, etc','Móveis e Decoração');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP001','Tudo relacionado a informática','informática e tablets');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP002','Todos os celulares e telefones que você deseja encontrar','Celulares e telefonia fixa');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP003','Tudo relacionado a eletrodomésticos','Eletrodomésticos');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP004','Televisões, home theaters, DVDs, Blurays','Televisões, audio e home theaters');
+INSERT INTO DEPARTAMENTO(id, descricao,nome) VALUES('DP005','Camas, Sofás, mesas, cozinha, etc','Móveis e Decoração');
 
 --TABLE FORNECEDOR Inserts
-INSERT INTO FORNECEDOR VALUES('62.288.584/0001-08','Motorola','Lucro real','São Paulo','São Paulo','São Paulo','Vila Olímpia','Rua Paes Leme',525);
-INSERT INTO FORNECEDOR VALUES('09.509.531/0009-36','ASUS','Lucro real','São Paulo','São Paulo','São Paulo','CAJAMAR','Via de Acesso Norte KM 38',420);
-INSERT INTO FORNECEDOR VALUES('62.058.318/0007-76','Consul','Lucro real','São Paulo','São Paulo','São Paulo','Jardim Santa Emília','Rua Olympia Semeraro',675);
-INSERT INTO FORNECEDOR VALUES('61.086.336/0004-56','Philips','Lucro real','São Paulo','São Paulo','São Paulo','MAUÁ','Av. Comendador wolthers',500);
-INSERT INTO FORNECEDOR VALUES('02.895.152/0001-25','Ortobom','Lucro real','Rio de Janeiro','Nova Iguaçu','Rio de Janeiro','Vila Três Corações','Av. Henrique Duque Estrada Mayer',1701);
+INSERT INTO FORNECEDOR VALUES('62.288.584/0001-08','Motorola','Lucro real','São Paulo','São Paulo','Vila Olímpia','Rua Paes Leme',525);
+INSERT INTO FORNECEDOR VALUES('09.509.531/0009-36','ASUS','Lucro real','São Paulo','São Paulo','CAJAMAR','Via de Acesso Norte KM 38',420);
+INSERT INTO FORNECEDOR VALUES('62.058.318/0007-76','Consul','Lucro real','São Paulo','São Paulo','Jardim Santa Emília','Rua Olympia Semeraro',675);
+INSERT INTO FORNECEDOR VALUES('61.086.336/0004-56','Philips','Lucro real','São Paulo','São Paulo','MAUÁ','Av. Comendador wolthers',500);
+INSERT INTO FORNECEDOR VALUES('02.895.152/0001-25','Ortobom','Lucro real','Rio de Janeiro','Nova Iguaçu','Vila Três Corações','Av. Henrique Duque Estrada Mayer',1701);
+INSERT INTO FORNECEDOR VALUES('00.623.904/0001-73','Apple Computer Brasil LTDA','Lucro real','São Paulo','São Paulo','ITAIM BIBI','R LEOPOLDO COUTO MAGALHAES JUNIOR',700);
+
 
 --TABLE TELEFONE-FORNECEDOR Inserts
 INSERT INTO TELEFONE_FORNECEDOR VALUES('62.288.584/0001-08','4003-8859');
@@ -85,9 +87,15 @@ INSERT INTO TELEFONE_FORNECEDOR VALUES('09.509.531/0009-36','3003-0398');
 INSERT INTO TELEFONE_FORNECEDOR VALUES('62.058.318/0007-76','3003-0777');
 INSERT INTO TELEFONE_FORNECEDOR VALUES('61.086.336/0004-56','2121-0203');
 INSERT INTO TELEFONE_FORNECEDOR VALUES('02.895.152/0001-25','2221-1436');
+INSERT INTO TELEFONE_FORNECEDOR VALUES('00.623.904/0001-73','4004-1005');
+
 
 --TABLE PRODUTO Inserts
-INSERT INTO PRODUTO(id_departamento, cnpj_fornecedor, nome, descricao, estoque, imposto, preco) VALUES(2,'62.288.584/0001-08','Moto G', '2a geracao c/ 2 chips', 10, 0.5, 700);
-INSERT INTO PRODUTO(id_departamento, cnpj_fornecedor, nome, descricao, estoque, imposto, preco) VALUES(2,'62.288.584/0001-08','Tablet Motorola', '1gb RAM 32gb de memória processador 1.5GHz', 4, 0.4, 850);
+INSERT INTO PRODUTO(id, id_departamento, cnpj_fornecedor, nome, descricao, estoque, imposto, preco) VALUES('P-000001','DP002','00.623.904/0001-73','Apple iPhone 6s', 'iOS 64GB 1 chip', 6, 0.5, 4000);
+INSERT INTO PRODUTO(id, id_departamento, cnpj_fornecedor, nome, descricao, estoque, imposto, preco) VALUES('P-000002','DP002','00.623.904/0001-73','Apple iPhone 6', 'iOS 32GB 1 chip', 8, 0.5, 3000);
+INSERT INTO PRODUTO(id, id_departamento, cnpj_fornecedor, nome, descricao, estoque, imposto, preco) VALUES('P-000003','DP002','09.509.531/0009-36','Asus Zen Fone 2', '6G545WW Intel 2.3Ghz, Android 5.0, Tela Full HD 5.5´, 32Gb', 10, 0.5, 1300);
+INSERT INTO PRODUTO(id, id_departamento, cnpj_fornecedor, nome, descricao, estoque, imposto, preco) VALUES('P-000004','DP002','62.288.584/0001-08','Motorola Moto G', '2a geracao c/ 2 chips Android', 15, 0.5, 700);
+INSERT INTO PRODUTO(id, id_departamento, cnpj_fornecedor, nome, descricao, estoque, imposto, preco) VALUES('P-000005','DP001','62.288.584/0001-08','Motorola Tablet M10', '1gb RAM 32gb de memória processador 1.5GHz', 4, 0.4, 850);
+
 
 
