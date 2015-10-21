@@ -52,11 +52,11 @@ INSERT INTO CLIENTE(cpf_pessoa,email) VALUES('11111111111','pedro@gmail.com');
 INSERT INTO CLIENTE(cpf_pessoa,email) VALUES('88888888888','natarajan@gmail.com');
 
 --TABLE FUNCIONARIO Inserts
-INSERT INTO FUNCIONARIO(cpf_pessoa,salario_base,comissao,salario_familia) VALUES('44444444444',1200,1.10,1400);
-INSERT INTO FUNCIONARIO(cpf_pessoa,salario_base,comissao,salario_familia) VALUES('99999999999',1200,1.10,1300);
-INSERT INTO FUNCIONARIO(cpf_pessoa,salario_base,comissao,salario_familia) VALUES('66666666666',1200,1.10,1200);
-INSERT INTO FUNCIONARIO(cpf_pessoa,salario_base,comissao,salario_familia) VALUES('55555555555',1200,1.10,1300);
-INSERT INTO FUNCIONARIO(cpf_pessoa,salario_base,comissao,salario_familia) VALUES('77777777777',1200,1.10,1300);
+INSERT INTO FUNCIONARIO(matricula, cpf_pessoa,salario_base,comissao,salario_familia) VALUES('F0001', '44444444444',1200,1.10,1400);
+INSERT INTO FUNCIONARIO(matricula, cpf_pessoa,salario_base,comissao,salario_familia) VALUES('F0002','99999999999',1200,1.10,1300);
+INSERT INTO FUNCIONARIO(matricula, cpf_pessoa,salario_base,comissao,salario_familia) VALUES('F0003','66666666666',1200,1.10,1200);
+INSERT INTO FUNCIONARIO(matricula, cpf_pessoa,salario_base,comissao,salario_familia) VALUES('F0004','55555555555',1200,1.10,1300);
+INSERT INTO FUNCIONARIO(matricula, cpf_pessoa,salario_base,comissao,salario_familia) VALUES('F0005','77777777777',1200,1.10,1300);
 
 --TABLE DEPENDENTE Inserts
 INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('12121212121', 4);
