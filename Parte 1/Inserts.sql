@@ -59,11 +59,11 @@ INSERT INTO FUNCIONARIO(matricula, cpf_pessoa,salario_base,comissao,salario_fami
 INSERT INTO FUNCIONARIO(matricula, cpf_pessoa,salario_base,comissao,salario_familia) VALUES('F0005','77777777777',1200,1.10,1300);
 
 --TABLE DEPENDENTE Inserts
-INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('12121212121', 4);
-INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('15151515151', 4);
-INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('16161616161', 7);
-INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('18181818181', 5);
-INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('17171717171', 9);
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('12121212121', 'F0001');
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('15151515151', 'F0001');
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('16161616161', 'F0005');
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('18181818181', 'F0005');
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('17171717171', 'F0002');
 
 --TABLE DEPARTAMENTO Inserts
 INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Tudo relacionado a informática','informática e tablets');
