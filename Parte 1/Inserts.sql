@@ -1,20 +1,24 @@
+-- caso precise acertar o formato da data usar: 
+-- SET DATESTYLE TO 'SQL, DMY';
+
 --TABLE PESSOA Inserts
 INSERT INTO PESSOA VALUES('11111111111','111111111','Pedro','M','26/12/1996','Paraíba','Cajazeiras','Jardim Oasis','Jose Dantas Nobre',371);
 INSERT INTO PESSOA VALUES('22222222222','222222222','João','M','25/07/1998','Paraíba','Cajazeiras','Pôr do Sol','Padre Rolim',222);
 INSERT INTO PESSOA VALUES('33333333333','333333333','Francisco','M','22/05/1983','Paraíba','João Pessoa','Bancários','Serafim Bernardo',415);
-INSERT INTO PESSOA VALUES('44444444444','444444444','Antônia','F','12/02/1982','Paraíba','João Pessoa','Juazeirinho','Cruzeiro Olinda',231);
+INSERT INTO PESSOA VALUES('44444444444','444444444','Antônia','F','12/02/1972','Paraíba','João Pessoa','Juazeirinho','Cruzeiro Olinda',231);
 INSERT INTO PESSOA VALUES('55555555555','555555555','Maria','F','08/05/1968','Ceará','Fortaleza','Cormecial','Av. Principal',1078);
 INSERT INTO PESSOA VALUES('66666666666','666666666','Lucas','M','14/09/1991','Rio Grande do Norte','Natal','Lagoa Nova','	',133);
-INSERT INTO PESSOA VALUES('77777777777','777777777','Fernanda','F','02/02/1992','Paraíba','João Pessoa','Bessa','Avenida Presidente Afonso Pena',791);
+INSERT INTO PESSOA VALUES('77777777777','777777777','Fernanda','F','02/02/1972','Paraíba','João Pessoa','Bessa','Avenida Presidente Afonso Pena',791);
 INSERT INTO PESSOA VALUES('88888888888','123456789','Natarajan','M','28/03/1984','Paraíba','Sousa','Centro','Rua Cel José Gomes de Sá',7);
-INSERT INTO PESSOA VALUES('99999999999','888888888','Victor','M','08/05/1993','Paraíba','Cajazeiras','Centro','Rua Cel Antonio Silva',623);
+INSERT INTO PESSOA VALUES('99999999999','909090909','Victor','M','08/05/1973','Paraíba','Cajazeiras','Centro','Rua Cel Antonio Silva',623);
 INSERT INTO PESSOA VALUES('12121212121','121212121','Bruna','F','15/11/2003','Paraíba','Cajazeiras','Centro','Rua Hortelina de Sousa Lira',204);
 INSERT INTO PESSOA VALUES('13131313131','131313131','Amanda','F','14/07/1996','Rio Grande do Norte','Caicó','Centro','Rua Serafim Bernardo',352);
 INSERT INTO PESSOA VALUES('14141414141','141414141','José','M','20/02/1991','Pernambuco','Olinda','Centro','Av. Cel Batista',801);
-INSERT INTO PESSOA VALUES('15151515151','151515151','Carlos','M','02/04/1985','Alagoas','Maceió','Santos','Av. Manel de Sousa',922);
+INSERT INTO PESSOA VALUES('15151515151','151515151','Carlos','M','02/04/1995','Alagoas','Maceió','Santos','Av. Manel de Sousa',922);
 INSERT INTO PESSOA VALUES('16161616161','161616161','Augusto','M','25/02/1992','Rio Grande do Norte','Caicó','Centro','Rua José Nilson de sá',406);
-INSERT INTO PESSOA VALUES('17171717171','171717171','Caroline','F','23/02/1995','Rio Grande do Norte','Natal','Lagoa Nova','Av. Jardim Oásis',154);
+INSERT INTO PESSOA VALUES('17171717171','171717171','Caroline','F','23/02/1993','Rio Grande do Norte','Natal','Lagoa Nova','Av. Jardim Oásis',154);
 INSERT INTO PESSOA VALUES('18181818181','181818181','Nicole','F','05/09/2001','São Paulo','Santos','Orla','Av. Cel Santos de Sá',829);
+INSERT INTO PESSOA VALUES('40540540540','343434','Geny','F','18/10/1954','Paraíba','Sousa','Gato Preto','R. Cel José Gomes de Sá',7);
 
 
 --TABLE TELEFONE_PESSOA Inserts
@@ -55,11 +59,11 @@ INSERT INTO FUNCIONARIO(cpf_pessoa,salario_base,comissao,salario_familia) VALUES
 INSERT INTO FUNCIONARIO(cpf_pessoa,salario_base,comissao,salario_familia) VALUES('77777777777',1200,1.10,1300);
 
 --TABLE DEPENDENTE Inserts
-INSERT INTO DEPENDENTE VALUES('12121212121','44444444444',11);
-INSERT INTO DEPENDENTE VALUES('15151515151','44444444444',30);
-INSERT INTO DEPENDENTE VALUES('16161616161','77777777777',20);
-INSERT INTO DEPENDENTE VALUES('18181818181','55555555555',14);
-INSERT INTO DEPENDENTE VALUES('17171717171','99999999999',19);
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('12121212121', 4);
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('15151515151', 4);
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('16161616161', 7);
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('18181818181', 5);
+INSERT INTO DEPENDENTE(cpf_dependente, matricula_funcionario) VALUES('17171717171', 9);
 
 --TABLE DEPARTAMENTO Inserts
 INSERT INTO DEPARTAMENTO(descricao,nome) VALUES('Tudo relacionado a informática','informática e tablets');
@@ -82,11 +86,8 @@ INSERT INTO TELEFONE_FORNECEDOR VALUES('62.058.318/0007-76','3003-0777');
 INSERT INTO TELEFONE_FORNECEDOR VALUES('61.086.336/0004-56','2121-0203');
 INSERT INTO TELEFONE_FORNECEDOR VALUES('02.895.152/0001-25','2221-1436');
 
-
-
-
-
-
-
+--TABLE PRODUTO Inserts
+INSERT INTO PRODUTO(id_departamento, cnpj_fornecedor, nome, descricao, estoque, imposto, preco) VALUES(2,'62.288.584/0001-08','Moto G', '2a geracao c/ 2 chips', 10, 0.5, 700);
+INSERT INTO PRODUTO(id_departamento, cnpj_fornecedor, nome, descricao, estoque, imposto, preco) VALUES(2,'62.288.584/0001-08','Tablet Motorola', '1gb RAM 32gb de memória processador 1.5GHz', 4, 0.4, 850);
 
 
