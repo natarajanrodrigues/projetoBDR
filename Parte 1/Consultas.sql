@@ -165,14 +165,42 @@ ORDER BY qtde_produtos ASC
 LIMIT 1
 
 --27. Clientes que realizaram uma transacao no dia 19/10/15
+SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
+WHERE rv.dia='19/10/15';
+
 --28. Clientes que efetuaram uma compra no dia 19/10/15
---29. Clientes que realizaram uma transacao que não foi aceita
+SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
+JOIN Venda v ON rv.id_venda = v.id WHERE v.status='Finalizada';
+
 --30. Clientes que compraram algo a vista
+SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
+JOIN Venda v ON rv.id_venda = v.id JOIN Forma_Pagamento fp ON fp.id = v.id_formaPagamento
+WHERE tipo ILIKE 'Dinheiro à vista';
+
 --31. Clientes que efetuaram alguma compra cujo algum dos produtos comprados tenha sido da fornecedora ASUS
+SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
+JOIN Venda v ON rv.id_venda = v.id JOIN Item_Venda iv ON v.id = iv.id_venda
+JOIN Produto p ON iv.id_produto = p.id JOIN Fornecedor f ON f.cnpj = p.cnpj_fornecedor
+WHERE f.nome ILIKE 'ASUS';
+
 --32. Clientes que compraram mais de um produto numa mesma compra
+SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
+JOIN Venda v ON rv.id_venda = v.id JOIN Item_Venda iv ON iv.id_venda = v.id
+WHERE iv.quantidade>1
+
 --33. Clientes que efetuaram uma compra dividido em 12x
+SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
+JOIN Venda v ON rv.id_venda = v.id JOIN Forma_Pagamento fp ON fp.id = v.id_formaPagamento
+WHERE num_parcelas=12;
+
 --34. diminuir o salario em 100 reais para os funcionários que não tiverem realizado nem uma venda
+UPDATE FUNCIONARIO f SET salarioBase=salarioBase-100 WHERE cpf_pessoa NOT IN
+(SELECT rv.cpf_funcionario FROM Realiza_Venda rv);
+
 --35. dar desconto de 10% no valor total da compra de um cliente que tiver comprado mais de 1 produto da motorola
+UPDATE valor=valor*0.85 FROM Venda JOIN Item_Venda iv ON id = iv.id_venda
+JOIN Produto p ON iv.id_produto = p.id JOIN Fornecedor f ON p.cnpj_fornecedor = f.cnpj
+WHERE f.nome ILIKE 'MOTOROLA';
 
 --36. Funcionario que vendeu mais de 5 produtos em um único dia
 SELECT p.nome 
@@ -181,7 +209,6 @@ JOIN realiza_venda rv ON f.cpf_pessoa = rv.cpf_funcionario
 JOIN Transacao t ON rv.id_transacao = t.id 
 JOIN Transacao_produto tp ON t.id = tp.id_transacao
 WHERE (SELECT COUNT(*) FROM Produto p WHERE tp.id_produto = p.id GROUP BY rv.data)>5
-
 
 --37. Clientes mulher seguido dos produtos comprados
 SELECT pe.nome 
@@ -235,24 +262,6 @@ SELECT p.nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 JOIN realiza_venda rv ON f.cpf_pessoa = rv.cpf_funcionario 
 JOIN (SELECT cpf, cidade FROM Pessoa JOIN Cliente ON cpf = cpf_pessoa) as c ON c.cpf = rv.cpf_cliente
 WHERE c.cidade = 'João Pessoa'
-
-
-
----VIEWS---
-
---1. Exibe o cpf, o nome e a função da pessoa no sistema.
-CREATE VIEW funcaoPessoa AS
-SELECT DISTINCT p.cpf, p.nome, 
-CASE 
-   WHEN p.cpf = f.cpf_pessoa THEN 'Funcionario'
-   WHEN p.cpf = c.cpf_pessoa THEN 'Cliente'
-   WHEN p.cpf = d.cpf_pessoa THEN 'Dependente'
-END funcao 
-FROM Pessoa p, Funcionario f, Cliente c, Dependente d 
-WHERE p.cpf = f.cpf_pessoa OR p.cpf = c.cpf_pessoa OR p.cpf = d.cpf_pessoa
-ORDER BY funcao DESC
-
-
 
 
 
