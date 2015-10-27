@@ -1,7 +1,7 @@
 --PROCEDURES--
 
 --1. replace o maior codigo do produto, ou seja, o ultimo produto adicionado
-CREATE OR REPLACE FUNCTION maiorCodigoClienteProduto()
+CREATE OR REPLACE FUNCTION maiorCodigoProduto()
 RETURNS INTEGER
 AS'
    DECLARE 
