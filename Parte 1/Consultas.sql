@@ -40,20 +40,21 @@ SELECT COUNT(DISTINCT p.cidade) tipos_cidades
 FROM Pessoa p JOIN Cliente c ON p.cpf = c.cpf_pessoa
 
 --8. Exibir lucro por forma de pagamento
-SELECT fp.tipo formaPagamento, SUM(tp.quantidade * p.preco) valor_total
-FROM Forma_Pagamento fp JOIN Transacao t ON fp.id = t.id_formaPagamento
-JOIN Transacao_Produto tp ON tp.id_transacao = t.id 
-JOIN Produto p ON tp.id_produto = p.id
+SELECT fp.tipo formaPagamento, SUM(iv.quantidade * p.preco) valor_total
+FROM Forma_Pagamento fp JOIN Venda v ON fp.id = v.id_formaPagamento
+JOIN Item_venda iv ON iv.id_venda = v.id 
+JOIN Produto p ON iv.id_produto = p.id
 GROUP BY fp.id
 
 --9. Clientes que compraram por cartão
 SELECT p.nome 
-FROM Pessoa p JOIN Transacao t ON p.cpf = t.cpf_cliente
-JOIN Forma_Pagamento fp ON t.id_formaPagamento = t.id
-WHERE fp.tipo ILIKE '%cartao%'
+FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
+JOIN Venda v ON rv.id_venda = v.id
+JOIN Forma_Pagamento fp ON v.id_formaPagamento = fp.id
+WHERE fp.tipo ILIKE '%cartão%'
 
 --10. Exibir Produto mais caro
-SELECT p.nome produto FROM Produto p
+SELECT p.nome produto, p.preco FROM Produto p
 WHERE p.preco = (SELECT MAX(preco) FROM Produto)
 
 --11. Cidade que mais tem pessoas
@@ -64,46 +65,34 @@ ORDER BY quantidade DESC
 LIMIT 1
 
 --12. Produto que mais vendeu
-SELECT p.nome, COUNT(*) vendas 
-FROM Produto p JOIN Transacao_Produto tp
-ON p.id = tp.produto_id 
-GROUP BY p.id
-ORDER BY vendas DESC
-LIMIT 1
+SELECT p.nome, prodVenda.vendas*iv.quantidade as quantidade
+FROM (SELECT p.id,COUNT(id_produto)vendas FROM Produto p JOIN Item_venda iv ON p.id = iv.id_produto GROUP BY p.id) as prodVenda
+JOIN Item_Venda iv ON iv.id_produto = prodVenda.id JOIN Produto p ON iv.id_produto = p.id
+ORDER BY quantidade DESC LIMIT 1
 
 --13. nome do funcionário seguido do nome do dependente correspondente
 SELECT f.nome, d.nome 
 FROM (SELECT f.matricula,p.nome FROM Funcionario f JOIN Pessoa p ON f.cpf_pessoa = p.cpf) as f
-JOIN (SELECT d.matricula,p.nome FROM Dependente d JOIN Pessoa p ON d.cpf_pessoa = p.cpf) as d 
-ON f.matricula = d.matricula
+JOIN (SELECT d.matricula_funcionario,p.nome FROM Dependente d JOIN Pessoa p ON d.cpf_dependente = p.cpf) as d 
+ON f.matricula = d.matricula_funcionario
 
 --14. funcionários que não possuem dependentes
-SELECT p.nome funcionario
-FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa 
-WHERE NOT EXISTS(SELECT * FROM Dependente d
-WHERE d.cpf_funcionario = f.cpf_pessoa)
-
+SELECT p.nome funcionario FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
+WHERE NOT EXISTS(SELECT * FROM Dependente d WHERE f.matricula = d.matricula_funcionario)
 
 --15. funcionários que possuem um ou mais dependentes
 SELECT p.nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
-WHERE (SELECT COUNT(*) FROM Dependente d WHERE d.matricula = f.matricula)>1
+WHERE (SELECT COUNT(*) FROM Dependente d WHERE d.matricula_funcionario = f.matricula)>1
 
 --16. funcionários cujo os dependentes não moram na mesma cidade
 SELECT f.nome 
 FROM (SELECT f.matricula,p.nome,p.cidade FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa) as f 
-JOIN (SELECT d.matricula,p.nome,p.cidade FROM Pessoa p JOIN Dependente d ON p.cpf = d.cpf_pessoa) as d 
-ON f.matricula = d.matricula
+JOIN (SELECT d.matricula_funcionario,p.nome,p.cidade FROM Pessoa p JOIN Dependente d ON p.cpf = d.cpf_dependente) as d 
+ON f.matricula = d.matricula_funcionario
 WHERE f.cidade != d.cidade
 
 --17. Pessoas e seus "cargos" na loja
-SELECT DISTINCT p.nome,
-CASE
-   WHEN p.cpf = f.cpf_pessoa THEN 'Funcionario'
-   WHEN p.cpf = d.cpf_pessoa THEN 'Dependente'
-   WHEN p.cpf = c.cpf_pessoa THEN 'Cliente'
-END tipo
-FROM Pessoa p, Funcionario f, Dependente d, Cliente c
-WHERE p.cpf = f.cpf_pessoa OR p.cpf = d.cpf_pessoa OR p.cpf = c.cpf_pessoa
+SELECT * FROM funcaoPessoa;
 
 --18. Clientes que usam gmail
 SELECT p.nome FROM Pessoa p JOIN Cliente c
@@ -118,39 +107,29 @@ LIMIT 1
 --20. Funcionário com mais dependentes
 SELECT f.nome as funcionario, COUNT(*) as qt_dependentes 
 FROM (SELECT matricula,nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa) as f
-JOIN Dependente d ON f.matricula = d.matricula
+JOIN Dependente d ON f.matricula = d.matricula_funcionario
 GROUP BY f.nome
 ORDER BY qt_dependentes DESC LIMIT 1
 
---21. Qual "Cargo" tem mais pessoas
-SELECT nome_cargo.tipo, COUNT(*) pessoas FROM (SELECT DISTINCT p.nome,
-CASE
-   WHEN p.cpf = f.cpf_pessoa THEN 'Funcionário'
-   WHEN p.cpf = d.cpf_pessoa THEN 'Dependente'
-   WHEN p.cpf = c.cpf_pessoa THEN 'Cliente'
-END tipo
-FROM Pessoa p, Funcionario f, Dependente d, Cliente c
-WHERE p.cpf = f.cpf_pessoa OR p.cpf = d.cpf_pessoa OR p.cpf = c.cpf_pessoa
-order by tipo ASC) AS nome_cargo GROUP BY nome_cargo.tipo 
-ORDER BY pessoas DESC
-LIMIT 1
+--21. Qual "Cargo" tem mais pessoas *funcaoPessoa É UMA VIEW*
+SELECT f.funcao, COUNT(funcao) qtde FROM funcaoPessoa f
+GROUP BY f.funcao ORDER BY qtde DESC LIMIT 1
 
 --22. fornecedores que possuem um ou mais telefones
 SELECT f.nome FROM Fornecedor f
-WHERE (SELECT COUNT(*) FROM Telefone_fornecedor tf WHERE tf.cnpj_fornecedor = f.cpnj)>1
+WHERE (SELECT COUNT(*) FROM Telefone_fornecedor tf WHERE tf.cnpj_fornecedor = f.cnpj)>1
 
 --23. fornecedores em conjunto com o departamento de produtos que eles fornecem
 SELECT f.cnpj, f.nome fornecedor, d.nome departamento 
 FROM Fornecedor f JOIN Produto p ON f.cnpj = p.cnpj_fornecedor
-JOIN Departamento d ON d.ID = p.departamento_id
+JOIN Departamento d ON d.ID = p.id_departamento
 
 --24. fornecedores que fornecem mais produtos de um mesmo tipo
 SELECT f.cnpj, f.nome, COUNT(*) qtde FROM Fornecedor f
 JOIN Produto p ON f.cnpj = p.cnpj_fornecedor
-JOIN Departamento d ON d.id = p.departamento_id
+JOIN Departamento d ON d.id = p.id_departamento
 group by f.cnpj, d.id
-ORDER BY qtde DESC
-LIMIT 1
+ORDER BY qtde DESC LIMIT 1
 
 --25. Departamento e a quantidade de produtos do mesmo
 SELECT d.nome departamento, COUNT(*) qtde_produtos 
@@ -159,18 +138,18 @@ GROUP BY d.id
 
 --26. Departamento com menor quantidade de produtos
 SELECT d.nome departamento, COUNT(*) qtde_produtos
-FROM Departamento d JOIN Produto p ON d.id = p.departamento_id
+FROM Departamento d JOIN Produto p ON d.id = p.id_departamento
 GROUP BY d.id
 ORDER BY qtde_produtos ASC
 LIMIT 1
 
 --27. Clientes que realizaram uma transacao no dia 19/10/15
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
-WHERE rv.dia='19/10/15';
+WHERE rv.data='19/10/15';
 
 --28. Clientes que efetuaram uma compra no dia 19/10/15
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
-JOIN Venda v ON rv.id_venda = v.id WHERE v.status='Finalizada';
+JOIN Venda v ON rv.id_venda = v.id WHERE rv.data='19/10/2015' AND v.status='Finalizada';
 
 --30. Clientes que compraram algo a vista
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
@@ -180,7 +159,7 @@ WHERE tipo ILIKE 'Dinheiro à vista';
 --31. Clientes que efetuaram alguma compra cujo algum dos produtos comprados tenha sido da fornecedora ASUS
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 JOIN Venda v ON rv.id_venda = v.id JOIN Item_Venda iv ON v.id = iv.id_venda
-JOIN Produto p ON iv.id_produto = p.id JOIN Fornecedor f ON f.cnpj = p.cnpj_fornecedor
+JOIN Produto pr ON iv.id_produto = pr.id JOIN Fornecedor f ON f.cnpj = pr.cnpj_fornecedor
 WHERE f.nome ILIKE 'ASUS';
 
 --32. Clientes que compraram mais de um produto numa mesma compra
@@ -202,21 +181,19 @@ UPDATE valor=valor*0.85 FROM Venda JOIN Item_Venda iv ON id = iv.id_venda
 JOIN Produto p ON iv.id_produto = p.id JOIN Fornecedor f ON p.cnpj_fornecedor = f.cnpj
 WHERE f.nome ILIKE 'MOTOROLA';
 
---36. Funcionario que vendeu mais de 5 produtos em um único dia
-SELECT p.nome 
-FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
-JOIN realiza_venda rv ON f.cpf_pessoa = rv.cpf_funcionario
-JOIN Transacao t ON rv.id_transacao = t.id 
-JOIN Transacao_produto tp ON t.id = tp.id_transacao
-WHERE (SELECT COUNT(*) FROM Produto p WHERE tp.id_produto = p.id GROUP BY rv.data)>5
+--36. Funcionario que vendeu mais de 2 produtos em um único dia
+SELECT p.nome, SUM(iv.quantidade)
+FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_funcionario
+JOIN Venda v ON rv.id_venda = v.id JOIN Item_venda iv ON v.id = iv.id_venda
+GROUP BY p.nome, rv.data HAVING COUNT(*)>2
 
 --37. Clientes mulher seguido dos produtos comprados
-SELECT pe.nome 
+SELECT pe.nome cliente, pr.nome produto
 FROM Pessoa pe JOIN Cliente c ON pe.cpf = c.cpf_pessoa
 JOIN realiza_venda rv ON c.cpf_pessoa = rv.cpf_cliente
-JOIN Transacao t ON rv.id_transacao = t.id
-JOIN Transacao_produto tp ON t.id = tp.id_transacao
-JOIN Produto pr ON tp.id_produto = pr.id
+JOIN Venda v ON rv.id_venda = v.id
+JOIN Item_venda iv ON v.id = iv.id_venda
+JOIN Produto pr ON iv.id_produto = pr.id
 WHERE pe.sexo='F'
 
 --38. Cliente que mais consumiu na loja
@@ -233,12 +210,8 @@ SELECT avg(p.preco) media_preco
 FROM Fornecedor f JOIN Produto p ON f.cnpj = p.cnpj_fornecedor
 WHERE f.nome='Motorola'
 
---40. Transacao com maior custo
-SELECT sum(tp.quantidade*p.preco) custo
-FROM Transacao t JOIN Transacao_produto tp ON t.id = tp.id_transacao JOIN Produto p ON tp.id_produto = p.id
-GROUP BY t.id
-ORDER BY custo DESC
-LIMIT 1
+--40. Venda de maior custo
+SELECT id, valor FROM Venda ORDER BY valor DESC LIMIT 1
 
 --41. Produto com maior quantidade de estoque
 SELECT p.nome FROM Produto p
@@ -263,7 +236,18 @@ JOIN realiza_venda rv ON f.cpf_pessoa = rv.cpf_funcionario
 JOIN (SELECT cpf, cidade FROM Pessoa JOIN Cliente ON cpf = cpf_pessoa) as c ON c.cpf = rv.cpf_cliente
 WHERE c.cidade = 'João Pessoa'
 
+--46. Produto que é mais comprado por clientes do sexo feminino
+SELECT b.nome, b.quantidade_venda*iv.quantidade quantidade FROM (SELECT pr.id,pr.nome, COUNT(pr.id) quantidade_venda
+FROM Pessoa pe JOIN Cliente c ON pe.cpf = c.cpf_pessoa JOIN realiza_venda rv ON c.cpf_pessoa = rv.cpf_cliente
+JOIN Venda v ON rv.id_venda = v.id JOIN Item_venda iv ON v.id = iv.id_venda
+JOIN Produto pr ON iv.id_produto = pr.id WHERE pe.sexo='F' GROUP BY pr.id) as b 
+JOIN Item_venda iv ON b.id = iv.id_produto ORDER BY quantidade DESC LIMIT 1
 
+--47. Média do consumo dos clientes do sexo feminino
+SELECT p.nome cliente, AVG(v.valor) media_gasto
+FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
+JOIN Venda v ON rv.id_venda = v.id WHERE p.sexo='F'
+GROUP BY p.nome
 
 --Outras Consultas para Mostrar a Janderson
 
