@@ -265,7 +265,80 @@ WHERE c.cidade = 'João Pessoa'
 
 
 
+--Outras Consultas para Mostrar a Janderson
 
+-- 1) Mostre como ficaria o nome, a descrição e os preços de TV que não são FULL HD e o nome, descrição e -- preços com 5% de desconto de TV que são FULL HD
+select nome, descricao, preco
+from produto 
+where nome ilike'%TV%' and descricao not ilike '%FULL HD%'
+UNION
+select nome, descricao, preco * .95
+from produto 
+where nome ilike'%TV%' and descricao ilike '%FULL HD%'
+
+-- 2) Quais os fornecedores tem produtos presentes em apenas 1 departamento da loja? 
+select f.nome, count (distinct d.id) as num_dep
+from produto p, fornecedor f, departamento d
+where p.id_departamento=d.id and p.cnpj_fornecedor = f.cnpj
+group by f.nome
+having count (distinct d.id) = 1
+
+
+-- 3) Qual a média de vendas do mês de Outubro
+select avg(v.valor) as media_vendas
+from venda v, realiza_venda rv
+where v.id = rv.id_venda and 
+	rv.data between to_date('01/10/2015', 'dd/mm/yyyy') and to_date('30/10/2015', 'dd/mm/yyyy')
+
+
+-- 4) Mostre o numero de vendas e o valor total delas agrupado por data e funcionário responsavel pela venda
+select data, nome as vendedor, count(id) as num_vendas, sum(valor) as total_vendas 
+from realiza_venda join venda on id_venda = id 
+	join funcionario on cpf_funcionario = cpf_pessoa join pessoa on cpf=cpf_pessoa
+group by data, nome
+
+
+-- 5) Mostre o numero total de vendas que cada funcionário fez. Se um funcionario nao fez nenhuma venda, imprimir
+-- seu nome seguido do valor 0
+select nome as vendedor, count (id_venda) as num_vendas
+from funcionario join pessoa on cpf_pessoa = cpf left outer join realiza_venda on cpf_pessoa=cpf_funcionario
+group by nome
+
+
+-- 6) Qual departamento teve menor numero de itens de vendas (volume de vendas)?
+select d.nome, sum(iv.quantidade)
+from item_venda iv join produto p on iv.id_produto = p.id 
+	join departamento d on p.id_departamento = d.id 
+group by d.nome
+order by sum(iv.quantidade) 
+limit 1
+
+
+-- 7) Mostrar total de itens vendidos por departamento
+select d.nome, sum(iv.quantidade)
+from item_venda iv join produto p on iv.id_produto = p.id 
+	join departamento d on p.id_departamento = d.id 
+group by d.nome
+
+
+-- 8) Mostrar a quantidade de pagamento que os utilizaram uma determinada forma de pagamento e a media 
+-- do valor das vendas de cada tipo de forma de pagamento. 
+select iv.tipo as forma_pagmto, count (*) as qnt_vendas
+from item_venda iv join venda v on iv.id_venda = v.id join forma_pagamamento fp on fp.id = v.id_formapagamento
+group by iv.tipo
+
+
+-- 9) mostre o nome e cpf dos clientes que nao fizeram nenhuma venda
+select nome as cliente, cpf_pessoa as cpf
+from pessoa join 
+(
+(select cpf_pessoa from cliente)
+except 
+(select c.cpf_pessoa
+from cliente c, realiza_venda rv
+where c.cpf_pessoa = rv.cpf_cliente)
+) as clientes_sem_venda
+on cpf = clientes_sem_venda.cpf_pessoa
 
 
 
