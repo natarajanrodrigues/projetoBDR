@@ -64,11 +64,8 @@ GROUP BY cidade
 ORDER BY quantidade DESC
 LIMIT 1
 
---12. Produto que mais vendeu
-SELECT p.nome, prodVenda.vendas*iv.quantidade as quantidade
-FROM (SELECT p.id,COUNT(id_produto)vendas FROM Produto p JOIN Item_venda iv ON p.id = iv.id_produto GROUP BY p.id) as prodVenda
-JOIN Item_Venda iv ON iv.id_produto = prodVenda.id JOIN Produto p ON iv.id_produto = p.id
-ORDER BY quantidade DESC LIMIT 1
+--12. Produto que mais vendeu prod_Venda é uma VIEW
+SELECT * FROM prod_Venda LIMIT 1
 
 --13. nome do funcionário seguido do nome do dependente correspondente
 SELECT f.nome, d.nome 
@@ -248,6 +245,11 @@ SELECT p.nome cliente, AVG(v.valor) media_gasto
 FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 JOIN Venda v ON rv.id_venda = v.id WHERE p.sexo='F'
 GROUP BY p.nome
+
+--48. Produto que cuja que deu mais lucro a loja *prod_Vendas é uma VIEW*
+SELECT p.nome, p.unidades_vendidas*pr.preco valor_total 
+FROM prod_Vendas p NATURAL JOIN Produto pr
+ORDER BY valor_total DESC LIMIT 1
 
 --Outras Consultas para Mostrar a Janderson
 
