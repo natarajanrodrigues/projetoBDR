@@ -27,13 +27,13 @@ FROM Departamento d JOIN Produto p ON d.id = p.departamento_id
 GROUP BY d.id
 
 
---4.1 produtos por fornecedores
+--4 produtos por fornecedores
 CREATE VIEW produto_fornecedor AS
 SELECT f.cnpj, f.nome fornecedor, p.id id_produto, p.nome produto, p.preco
 FROM Fornecedor f JOIN Produto p ON f.cnpj = p.cnpj_fornecedor
 
 
---6. id, produto, quantidade de unidades vendidas Ordenado pela quantidade
+--5. id, produto, quantidade de unidades vendidas Ordenado pela quantidade
 CREATE VIEW prod_Vendas AS
 SELECT DISTINCT q.id,q.nome,q.vendas*iv.quantidade unidades_vendidas
 FROM (SELECT p.id,p.nome,COUNT(*)vendas 
