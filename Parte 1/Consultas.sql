@@ -1,20 +1,20 @@
 --CONSULTAS
 
 /*
-	Por medidas de organização e praticidade na hora de ler as consultas
-	Seria bom colocarmos uma(s) linha(s) comentada(s) antes da consulta
-	indicando do que se trata a mesma.
+   Por medidas de organização e praticidade na hora de ler as consultas
+   Seria bom colocarmos uma(s) linha(s) comentada(s) antes da consulta
+   indicando do que se trata a mesma.
 */
 
 --1. Quantos funcionários trabalham na loja
 SELECT COUNT(*) FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 
 --2. Clientes que moram em Cajazeiras
-SELECT c.nome FROM Cliente c JOIN Pessoa p ON c.cpf_pessoa = p.cpf
+SELECT p.nome FROM Cliente c JOIN Pessoa p ON c.cpf_pessoa = p.cpf
 WHERE p.cidade='Cajazeiras'
 
 --3. Clientes que possuem dois ou mais telefones
-SELECT c.nome 
+SELECT p.nome 
 FROM Cliente c JOIN Pessoa p ON c.cpf_pessoa = p.cpf
 WHERE (SELECT COUNT(*) FROM Telefone_Pessoa tp 
 WHERE tp.cpf_pessoa = c.cpf_pessoa) > 1
@@ -23,7 +23,7 @@ WHERE tp.cpf_pessoa = c.cpf_pessoa) > 1
 SELECT p.nome
 FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 WHERE NOT EXISTS (SELECT * FROM Realiza_Venda rv 
-WHERE rv.cpf_funcionario = p.cpf_pessoa)
+WHERE rv.cpf_funcionario = f.cpf_pessoa)
 
 --5. Funcionários que realizaram duas ou mais vendas
 SELECT p.nome
@@ -91,7 +91,7 @@ JOIN (SELECT d.matricula_funcionario,p.nome,p.cidade FROM Pessoa p JOIN Dependen
 ON f.matricula = d.matricula_funcionario
 WHERE f.cidade != d.cidade
 
---17. Pessoas e seus "cargos" na loja
+--17. Pessoas e seus "cargos" na loja *funcaoPessoa É UMA VIEW*
 SELECT * FROM funcaoPessoa;
 
 --18. Clientes que usam gmail
@@ -272,13 +272,13 @@ having count (distinct d.id) = 1
 select avg(v.valor) as media_vendas
 from venda v, realiza_venda rv
 where v.id = rv.id_venda and 
-	rv.data between to_date('01/10/2015', 'dd/mm/yyyy') and to_date('30/10/2015', 'dd/mm/yyyy')
+   rv.data between to_date('01/10/2015', 'dd/mm/yyyy') and to_date('30/10/2015', 'dd/mm/yyyy')
 
 
 -- 4) Mostre o numero de vendas e o valor total delas agrupado por data e funcionário responsavel pela venda
 select data, nome as vendedor, count(id) as num_vendas, sum(valor) as total_vendas 
 from realiza_venda join venda on id_venda = id 
-	join funcionario on cpf_funcionario = cpf_pessoa join pessoa on cpf=cpf_pessoa
+   join funcionario on cpf_funcionario = cpf_pessoa join pessoa on cpf=cpf_pessoa
 group by data, nome
 
 
@@ -292,7 +292,7 @@ group by nome
 -- 6) Qual departamento teve menor numero de itens de vendas (volume de vendas)?
 select d.nome, sum(iv.quantidade)
 from item_venda iv join produto p on iv.id_produto = p.id 
-	join departamento d on p.id_departamento = d.id 
+   join departamento d on p.id_departamento = d.id 
 group by d.nome
 order by sum(iv.quantidade) 
 limit 1
@@ -301,7 +301,7 @@ limit 1
 -- 7) Mostrar total de itens vendidos por departamento
 select d.nome, sum(iv.quantidade)
 from item_venda iv join produto p on iv.id_produto = p.id 
-	join departamento d on p.id_departamento = d.id 
+   join departamento d on p.id_departamento = d.id 
 group by d.nome
 
 
@@ -333,4 +333,4 @@ on cpf = clientes_sem_venda.cpf_pessoa
 
 
 
-	
+   
