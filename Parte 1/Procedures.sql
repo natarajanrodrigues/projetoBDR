@@ -19,8 +19,7 @@ AS'
    DECLARE
       total DOUBLE PRECISION;
    BEGIN
-      SELECT INTO total SUM(p.preco*iv.estoque) FROM Item_Venda iv JOIN Produto p
-      ON iv.id_produto = p.id
+      SELECT INTO total SUM(v.valor) FROM Venda v
       RETURN total;
    END'
 LANGUAGE plpgsql;
