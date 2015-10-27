@@ -50,3 +50,36 @@ AS'
       RETURN idade;
    END'
 LANGUAGE plpgsql;
+
+
+-- 5. calcula valor da comissão de um vendedor de acordo com a quantidade de vendas de um funcionário
+-- num determinado mes
+CREATE OR REPLACE FUNCTION calcula_comissao(VARCHAR, INTEGER)
+RETURNS FLOAT
+AS'
+   	DECLARE
+      	comissao FLOAT;
+      	vendas_mes DOUBLE PRECISION;
+      	matricula ALIAS FOR $1;
+      	mes ALIAS FOR $2;
+
+   	BEGIN
+
+   		SELECT INTO vendas_mes sum(valor)
+   		FROM Realiza_venda rv join Venda v on rv.id_venda=v.id
+   		WHERE rv.cpf_funcionario=matricula and extract(month from rv.data::timestamp) = mes::double precision;
+      	
+
+   		comissao = vendas_mes * 0.01;
+    	RETURN comissao;
+   	END'
+LANGUAGE plpgsql;
+
+
+-- 6. calcula o valor do salário família com base na quantidade de dependentes que o funcionário tem
+
+
+-- 7. coloca um departamento todo em promoção (x% de desconto em todos os produtos do departamento)
+
+
+-- 8. 
