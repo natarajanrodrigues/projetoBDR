@@ -99,26 +99,49 @@ AS'
 LANGUAGE plpgsql;
 
 
+-- 7. Retorna total da folha de pagamento
+CREATE OR REPLACE FUNCTION calcula_folha () RETURNS  DOUBLE PRECISION 
+AS '
+    DECLARE
+	    c1 REFCURSOR;
+	    sb DOUBLE PRECISION := 0;
+	    c DOUBLE PRECISION := 0;
+	    sf DOUBLE PRECISION := 0;
+		folha DOUBLE PRECISION := 0;
+    BEGIN
 
--- 7. coloca um departamento todo em promoção (x% de desconto em todos os produtos do departamento)
-CREATE OR REPLACE FUNCTION promocao_departamento(VARCHAR, DOUBLE PRECISION)
-RETURNS VOID
-AS'
-   	DECLARE
-      	uma_departamento ALIAS FOR $1;
-      	desconto ALIAS FOR $2;
+       OPEN c1 FOR SELECT salario_base, comissao, salario_familia FROM Funcionario;
+                    
+       FETCH c1 INTO sb, c, sf;
+       WHILE FOUND LOOP
+          folha := folha + sb + c + sf;
+       FETCH c1 INTO sb, c, sf;
+       END LOOP;
 
-   	BEGIN
-
-   		SELECT INTO qnt_dependentes count(*)
-   		FROM Dependente d join Funcionario f on d.matricula_funcionario = f.matricula
-   		WHERE f.matricula = uma_matricula;
-      	
-    	RETURN NULL;
-   	END'
+       CLOSE c1;
+       RETURN folha;
+	END' 
 LANGUAGE plpgsql;
 
 
 
--- 8. 
+-- 7b. Retorna total da folha de pagamento (usando FOR) 
+
+CREATE OR REPLACE FUNCTION calcula_folha2() RETURNS  FLOAT (2)
+AS '
+    DECLARE
+	    
+		folha FLOAT := 0;
+		func Funcionario%RowType;
+    BEGIN
+
+       FOR func IN SELECT * FROM FUNCIONARIO
+       		LOOP
+       			folha := folha + func.salario_base + func.salario_familia + func.comissao;
+       		END LOOP;
+
+       RETURN folha;
+	END' 
+LANGUAGE plpgsql;
+
 
