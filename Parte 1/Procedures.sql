@@ -2,10 +2,10 @@
 
 --1. replace o maior codigo do produto, ou seja, o ultimo produto adicionado
 CREATE OR REPLACE FUNCTION maiorCodigoProduto()
-RETURNS INTEGER
+RETURNS VARCHAR
 AS'
    DECLARE 
-      maxId INTEGER;
+      maxId VARCHAR;
    BEGIN
       SELECT INTO maxId max(id) FROM Produto;
       RETURN maxId;
