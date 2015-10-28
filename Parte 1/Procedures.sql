@@ -76,12 +76,49 @@ AS'
    	END'
 LANGUAGE plpgsql;
 
-select calcula_comissao('99999999999', 10, 0.1);
+
 
 -- 6. calcula o valor do salário família com base na quantidade de dependentes que o funcionário tem
 
+CREATE OR REPLACE FUNCTION calcula_salarioFamilia(VARCHAR, DOUBLE PRECISION)
+RETURNS DOUBLE PRECISION
+AS'
+   	DECLARE
+      	qnt_dependentes int;
+      	uma_matricula ALIAS FOR $1;
+      	vlr_por_dependente ALIAS FOR $2;
+
+   	BEGIN
+
+   		SELECT INTO qnt_dependentes count(*)
+   		FROM Dependente d join Funcionario f on d.matricula_funcionario = f.matricula
+   		WHERE f.matricula = uma_matricula;
+      	
+    	RETURN qnt_dependentes * vlr_por_dependente;
+   	END'
+LANGUAGE plpgsql;
+
+
 
 -- 7. coloca um departamento todo em promoção (x% de desconto em todos os produtos do departamento)
+CREATE OR REPLACE FUNCTION promocao_departamento(VARCHAR, DOUBLE PRECISION)
+RETURNS VOID
+AS'
+   	DECLARE
+      	uma_departamento ALIAS FOR $1;
+      	desconto ALIAS FOR $2;
+
+   	BEGIN
+
+   		SELECT INTO qnt_dependentes count(*)
+   		FROM Dependente d join Funcionario f on d.matricula_funcionario = f.matricula
+   		WHERE f.matricula = uma_matricula;
+      	
+    	RETURN NULL;
+   	END'
+LANGUAGE plpgsql;
+
 
 
 -- 8. 
+
