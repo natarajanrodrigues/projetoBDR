@@ -27,7 +27,7 @@ AS'
   BEGIN
       SELECT INTO produto_preco p.preco
       FROM Produto p WHERE p.id = NEW.id_produto;
-      UPDATE Venda SET valor=produto_preco*NEW.quantidade WHERE id=NEW.id_venda;
+      UPDATE Venda SET valor=valor+produto_preco*NEW.quantidade WHERE id=NEW.id_venda;
       RETURN NEW;
   END'
 LANGUAGE plpgsql;
