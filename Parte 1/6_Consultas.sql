@@ -65,7 +65,7 @@ ORDER BY quantidade DESC
 LIMIT 1
 
 --12. Produto que mais vendeu prod_Venda é uma VIEW
-SELECT * FROM prod_Venda LIMIT 1
+SELECT * FROM prod_Vendas LIMIT 1
 
 --13. nome do funcionário seguido do nome do dependente correspondente
 SELECT f.nome, d.nome 
@@ -82,7 +82,7 @@ SELECT p.nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 WHERE (SELECT COUNT(*) FROM Dependente d WHERE d.matricula_funcionario = f.matricula)>1
 
 --16. funcionários cujo os dependentes não moram na mesma cidade
-SELECT f.nome 
+SELECT distinct f.nome 
 FROM (SELECT f.matricula,p.nome,p.cidade FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa) as f 
 JOIN (SELECT d.matricula_funcionario,p.nome,p.cidade FROM Pessoa p JOIN Dependente d ON p.cpf = d.cpf_dependente) as d 
 ON f.matricula = d.matricula_funcionario
@@ -97,7 +97,7 @@ ON p.cpf = c.cpf_pessoa
 WHERE c.email ILIKE '%GMAIL%'
 
 --19. Funcionario que ganha mais
-SELECT p.nome, (f.salario_familia*f.comissao) salarioTotal FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
+SELECT p.nome, (f.salario_base + f.salario_familia + f.comissao) salarioTotal FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 ORDER BY salarioTotal DESC
 LIMIT 1
 
@@ -130,7 +130,7 @@ ORDER BY qtde DESC LIMIT 1
 
 --25. Departamento e a quantidade de produtos do mesmo
 SELECT d.nome departamento, COUNT(*) qtde_produtos 
-FROM Departamento d JOIN Produto p ON d.id = p.departamento_id
+FROM Departamento d JOIN Produto p ON d.id = p.id_departamento
 GROUP BY d.id
 
 --26. Departamento com menor quantidade de produtos
@@ -142,11 +142,11 @@ LIMIT 1
 
 --27. Clientes que realizaram uma transacao no dia 19/10/15
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
-WHERE rv.data='19/10/15';
+WHERE rv.data='15/10/15';
 
 --28. Clientes que efetuaram uma compra no dia 19/10/15
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
-JOIN Venda v ON rv.id_venda = v.id WHERE rv.data='19/10/2015' AND v.status='Finalizada';
+JOIN Venda v ON rv.id_venda = v.id WHERE rv.data='15/10/2015' AND v.status='Finalizada';
 
 --30. Clientes que compraram algo a vista
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
@@ -167,10 +167,10 @@ WHERE iv.quantidade>1
 --33. Clientes que efetuaram uma compra dividido em 12x
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 JOIN Venda v ON rv.id_venda = v.id JOIN Forma_Pagamento fp ON fp.id = v.id_formaPagamento
-WHERE num_parcelas=12;
+WHERE num_parcelas=10;
 
 --34. diminuir o salario em 100 reais para os funcionários que não tiverem realizado nem uma venda
-UPDATE FUNCIONARIO f SET salarioBase=salarioBase-100 WHERE cpf_pessoa NOT IN
+UPDATE FUNCIONARIO f SET salario_Base=salario_Base-100 WHERE cpf_pessoa NOT IN
 (SELECT rv.cpf_funcionario FROM Realiza_Venda rv);
 
 --35. dar desconto de 10% no valor total da compra de um cliente que tiver comprado mais de 1 produto da motorola
@@ -194,12 +194,12 @@ JOIN Produto pr ON iv.id_produto = pr.id
 WHERE pe.sexo='F'
 
 --38. Cliente que mais consumiu na loja
-SELECT pe.nome, sum(tp.quantidade*pr.preco) consumo_total
+SELECT pe.nome, sum(iv.quantidade*pr.preco) consumo_total
 FROM Pessoa pe JOIN Cliente c ON pe.cpf = c.cpf_pessoa
 JOIN realiza_venda rv ON c.cpf_pessoa = rv.cpf_cliente
-JOIN Transacao t ON rv.id_transacao = t.id
-JOIN Transacao_produto tp ON t.id = tp.id_transacao
-JOIN Produto pr ON tp.id_produto = pr.id
+JOIN Venda v ON rv.id_venda = v.id
+JOIN Item_venda iv ON v.id = iv.id_venda
+JOIN Produto pr ON iv.id_produto = pr.id
 GROUP BY pe.cpf ORDER BY consumo_total DESC LIMIT 1
 
 --39. media dos preços dos produtos fornecidos pela Motorola
@@ -223,7 +223,7 @@ SELECT p.nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 WHERE p.nome ILIKE '%M%';
 
 --44. Exibir ranking dos items mais presentes nas vendas
-SELECT p.nome, SUM(tp.quantidade) quantidade FROM Produto p JOIN Transacao_Produto tp ON p.id = tp.id_produto
+SELECT p.nome, SUM(iv.quantidade) quantidade FROM Produto p JOIN Item_venda iv ON p.id = iv.id_produto
 GROUP BY p.id 
 ORDER BY quantidade DESC
 
@@ -309,9 +309,10 @@ group by d.nome
 
 -- 8) Mostrar a quantidade de pagamento que os utilizaram uma determinada forma de pagamento e a media 
 -- do valor das vendas de cada tipo de forma de pagamento. 
-select iv.tipo as forma_pagmto, count (*) as qnt_vendas
-from item_venda iv join venda v on iv.id_venda = v.id join forma_pagamamento fp on fp.id = v.id_formapagamento
-group by iv.tipo
+select fp.tipo as forma_pagmto, count (*) as qnt_vendas
+from item_venda iv join venda v on iv.id_venda = v.id 
+join forma_pagamento fp on fp.id = v.id_formapagamento
+group by fp.tipo
 
 
 -- 9) mostre o nome e cpf dos clientes que nao fizeram nenhuma venda

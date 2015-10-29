@@ -19,7 +19,7 @@ AS'
    DECLARE
       total DOUBLE PRECISION;
    BEGIN
-      SELECT INTO total SUM(v.valor) FROM Venda v
+      SELECT INTO total SUM(v.valor) FROM Venda v;
       RETURN total;
    END'
 LANGUAGE plpgsql;
