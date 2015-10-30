@@ -92,16 +92,16 @@ SELECT p.nome FROM Pessoa p JOIN Cliente c
 ON p.cpf = c.cpf_pessoa
 WHERE c.email ILIKE '%GMAIL%'
 
---18. Funcionario que ganha mais
+--18. Funcionario que ganha mais (usa NATURAL JOIN) *ps.: já considerando a remorção do atributo COMISSAO*
 SELECT p.nome, (f.salario_base + f.salario_familia + f.comissao) salarioTotal 
-FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
+FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia)
 ORDER BY salarioTotal DESC
 LIMIT 1
 
---19. Funcionário com mais dependentes
+--19. Funcionário com mais dependentes (usando NATURAL JOIN)
 SELECT f.nome as funcionario, COUNT(*) as qt_dependentes 
-FROM (SELECT matricula,nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa) as f
-JOIN Dependente d ON f.matricula = d.matricula_funcionario
+FROM (SELECT matricula,nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa) 
+as f(matricula_funcionario,nome) NATURAL JOIN Dependente d 
 GROUP BY f.nome
 ORDER BY qt_dependentes DESC LIMIT 1
 
@@ -141,9 +141,10 @@ LIMIT 1
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 WHERE rv.data='15/10/15';
 
---27. Clientes que efetuaram uma compra no dia 19/10/15
-SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
-JOIN Venda v ON rv.id_venda = v.id WHERE rv.data='15/10/2015' AND v.status='Finalizada';
+--27. Clientes que realizaram uma transacao no dia 12/10/2015 (usando NATURAL JOIN)
+SELECT p.nome cliente 
+FROM Pessoa p NATURAL JOIN Realiza_Venda rv(data,hora,cpf,cpf_funcionario,id_venda)
+WHERE rv.data='12/10/2015';
 
 --28. Clientes que compraram algo a vista
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
