@@ -46,6 +46,7 @@ AS'
       dataAtual DATE;
       dataNascimento ALIAS FOR $1;
    BEGIN
+      dataAtual = now();
       idade = (dataAtual - dataNascimento)/365;
       RETURN idade;
    END'

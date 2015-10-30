@@ -97,7 +97,8 @@ ON p.cpf = c.cpf_pessoa
 WHERE c.email ILIKE '%GMAIL%'
 
 --19. Funcionario que ganha mais
-SELECT p.nome, (f.salario_base + f.salario_familia + f.comissao) salarioTotal FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
+SELECT p.nome, (f.salario_base + f.salario_familia + f.comissao) salarioTotal 
+FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 ORDER BY salarioTotal DESC
 LIMIT 1
 
