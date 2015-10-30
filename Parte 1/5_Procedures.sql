@@ -53,33 +53,9 @@ AS'
 LANGUAGE plpgsql;
 
 
--- 5. calcula valor da comissão de um vendedor de acordo com a quantidade de vendas de um funcionário
--- num determinado mes
-CREATE OR REPLACE FUNCTION calcula_comissao(VARCHAR, INTEGER, FLOAT)
-RETURNS FLOAT
-AS'
-   	DECLARE
-      	comissao FLOAT;
-      	vendas_mes DOUBLE PRECISION;
-      	matricula ALIAS FOR $1;
-      	mes ALIAS FOR $2;
-      	percent ALIAS FOR $3;
-
-   	BEGIN
-
-   		SELECT INTO vendas_mes sum(valor)
-   		FROM Realiza_venda rv join Venda v on rv.id_venda=v.id
-   		WHERE rv.cpf_funcionario=matricula and extract(month from rv.data::timestamp) = mes::double precision;
-      	
-
-   		comissao = vendas_mes * percent;
-    	RETURN comissao;
-   	END'
-LANGUAGE plpgsql;
 
 
-
--- 6. calcula o valor do salário família com base na quantidade de dependentes que o funcionário tem
+-- 5. calcula o valor do salário família com base na quantidade de dependentes que o funcionário tem
 
 CREATE OR REPLACE FUNCTION calcula_salarioFamilia(VARCHAR, DOUBLE PRECISION)
 RETURNS DOUBLE PRECISION
@@ -100,23 +76,22 @@ AS'
 LANGUAGE plpgsql;
 
 
--- 7. Retorna total da folha de pagamento
+-- 6. Retorna total da folha de pagamento
 CREATE OR REPLACE FUNCTION calcula_folha () RETURNS  DOUBLE PRECISION 
 AS '
     DECLARE
 	    c1 REFCURSOR;
 	    sb DOUBLE PRECISION := 0;
-	    c DOUBLE PRECISION := 0;
 	    sf DOUBLE PRECISION := 0;
 		folha DOUBLE PRECISION := 0;
     BEGIN
 
-       OPEN c1 FOR SELECT salario_base, comissao, salario_familia FROM Funcionario;
+       OPEN c1 FOR SELECT salario_base, salario_familia FROM Funcionario;
                     
-       FETCH c1 INTO sb, c, sf;
+       FETCH c1 INTO sb, sf;
        WHILE FOUND LOOP
-          folha := folha + sb + c + sf;
-       FETCH c1 INTO sb, c, sf;
+          folha := folha + sb + sf;
+       FETCH c1 INTO sb, sf;
        END LOOP;
 
        CLOSE c1;
@@ -126,7 +101,7 @@ LANGUAGE plpgsql;
 
 
 
--- 7b. Retorna total da folha de pagamento (usando FOR) 
+-- 6b. Retorna total da folha de pagamento (usando FOR) 
 
 CREATE OR REPLACE FUNCTION calcula_folha2() RETURNS  FLOAT (2)
 AS '
@@ -138,7 +113,7 @@ AS '
 
        FOR func IN SELECT * FROM FUNCIONARIO
        		LOOP
-       			folha := folha + func.salario_base + func.salario_familia + func.comissao;
+       			folha := folha + func.salario_base + func.salario_familia;
        		END LOOP;
 
        RETURN folha;

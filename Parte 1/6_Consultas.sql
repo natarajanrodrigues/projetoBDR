@@ -64,7 +64,7 @@ SELECT * FROM prod_Vendas
 WHERE unidades_vendidas = (SELECT MAX(unidades_vendidas) FROM prod_vendas)
 
 --12. nome do funcionário seguido do nome do dependente correspondente
-SELECT f.nome, d.nome 
+SELECT f.nome as funcionario, d.nome as dependente
 FROM (SELECT f.matricula,p.nome FROM Funcionario f JOIN Pessoa p ON f.cpf_pessoa = p.cpf) as f
 JOIN (SELECT d.matricula_funcionario,p.nome FROM Dependente d JOIN Pessoa p ON d.cpf_dependente = p.cpf) as d 
 ON f.matricula = d.matricula_funcionario
@@ -73,7 +73,7 @@ ON f.matricula = d.matricula_funcionario
 SELECT p.nome funcionario FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 WHERE NOT EXISTS(SELECT * FROM Dependente d WHERE f.matricula = d.matricula_funcionario)
 
---14. funcionários que possuem um ou mais dependentes ********** mais de 1 dependente
+--14. funcionários que possuem um ou mais dependentes mais de 1 dependente
 SELECT p.nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 WHERE (SELECT COUNT(*) FROM Dependente d WHERE d.matricula_funcionario = f.matricula) >1
 
@@ -93,10 +93,16 @@ ON p.cpf = c.cpf_pessoa
 WHERE c.email ILIKE '%GMAIL%'
 
 --18. Funcionario que ganha mais (usa NATURAL JOIN) *ps.: já considerando a remorção do atributo COMISSAO*
-SELECT p.nome, (f.salario_base + f.salario_familia + f.comissao) salarioTotal 
+SELECT p.nome, (f.salario_base + f.salario_familia) salarioTotal 
 FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia)
 ORDER BY salarioTotal DESC
 LIMIT 1
+
+-- 18.b Mesma consulta. Leva em consideração mais de 1 funcionário que recebam o valor máximo
+SELECT p.nome, (f.salario_base + f.salario_familia) salarioTotal 
+FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia)
+WHERE F.SALARIO_BASE + F.SALARIO_FAMILIA = ALL  (
+select max(f.salario_base + f.salario_familia) FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia))
 
 --19. Funcionário com mais dependentes (usando NATURAL JOIN)
 SELECT f.nome as funcionario, COUNT(*) as qt_dependentes 
