@@ -65,7 +65,8 @@ ORDER BY quantidade DESC
 LIMIT 1
 
 --12. Produto que mais vendeu prod_Venda é uma VIEW
-SELECT * FROM prod_Vendas LIMIT 1
+SELECT * FROM prod_Vendas 
+WHERE unidades_vendidas = (SELECT MAX(unidades_vendidas) FROM prod_vendas)
 
 --13. nome do funcionário seguido do nome do dependente correspondente
 SELECT f.nome, d.nome 
@@ -77,9 +78,9 @@ ON f.matricula = d.matricula_funcionario
 SELECT p.nome funcionario FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
 WHERE NOT EXISTS(SELECT * FROM Dependente d WHERE f.matricula = d.matricula_funcionario)
 
---15. funcionários que possuem um ou mais dependentes
+--15. funcionários que possuem um ou mais dependentes ********** mais de 1 dependente
 SELECT p.nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
-WHERE (SELECT COUNT(*) FROM Dependente d WHERE d.matricula_funcionario = f.matricula)>1
+WHERE (SELECT COUNT(*) FROM Dependente d WHERE d.matricula_funcionario = f.matricula) >1
 
 --16. funcionários cujo os dependentes não moram na mesma cidade
 SELECT distinct f.nome 
