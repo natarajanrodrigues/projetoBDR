@@ -330,6 +330,14 @@ where c.cpf_pessoa = rv.cpf_cliente)
 on cpf = clientes_sem_venda.cpf_pessoa
 
 
+/* 10) Se existe algum dependente que fez alguma compra, ou seja, o dependente também é cliente, 
+imprima o cpf e nome deste */
+select d.nome 
+from dependente d 
+where EXISTS
+(select rv.cpf_cliente
+from realiza_venda rv
+where d.cpf_dependente = cpf_cliente)
 
 
 
