@@ -145,7 +145,7 @@ LIMIT 1
 
 --26. Clientes que realizaram uma transacao no dia 19/10/15
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
-WHERE rv.data='15/10/15';
+WHERE rv.data='15/10/2015';
 
 --27. Clientes que realizaram uma transacao no dia 12/10/2015 (usando NATURAL JOIN)
 SELECT p.nome cliente 
@@ -153,7 +153,7 @@ FROM Pessoa p NATURAL JOIN Realiza_Venda rv(data,hora,cpf,cpf_funcionario,id_ven
 WHERE rv.data='12/10/2015';
 
 --28. Clientes que compraram algo a vista
-SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
+SELECT p.cpf, p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 JOIN Venda v ON rv.id_venda = v.id JOIN Forma_Pagamento fp ON fp.id = v.id_formaPagamento
 WHERE tipo ILIKE 'Dinheiro à vista';
 
@@ -244,7 +244,7 @@ JOIN Venda v ON rv.id_venda = v.id JOIN Item_venda iv ON v.id = iv.id_venda
 JOIN Produto pr ON iv.id_produto = pr.id WHERE pe.sexo='F' GROUP BY pr.id) as b 
 JOIN Item_venda iv ON b.id = iv.id_produto ORDER BY quantidade DESC LIMIT 1
 
---45. Média do consumo dos clientes do sexo feminino
+--45. Média do consumo das clientes do sexo feminino
 SELECT p.nome cliente, AVG(v.valor) media_gasto
 FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 JOIN Venda v ON rv.id_venda = v.id WHERE p.sexo='F'
@@ -252,13 +252,14 @@ GROUP BY p.nome
 
 --Outras Consultas 
 
---46. Produto que cuja que deu mais lucro a loja *prod_Vendas é uma VIEW*
+--46. Produto cuja saída que deu mais lucro a loja *prod_Vendas é uma VIEW*
 SELECT p.nome, p.unidades_vendidas*pr.preco valor_total 
 FROM prod_Vendas p NATURAL JOIN Produto pr
 ORDER BY valor_total DESC LIMIT 1
 
 
--- 47) Mostre como ficaria o nome, a descrição e os preços de TV que não são FULL HD e o nome, descrição e -- preços com 5% de desconto de TV que são FULL HD
+-- 47) Mostre como ficaria o nome, a descrição e os preços de TV que não são FULL HD e o nome, descrição 
+-- e preços com 5% de desconto de TV que são FULL HD
 select nome, descricao, preco
 from produto 
 where nome ilike'%TV%' and descricao not ilike '%FULL HD%'
@@ -335,12 +336,12 @@ on cpf = clientes_sem_venda.cpf_pessoa
 
 /* 56) Se existe algum dependente que fez alguma compra, ou seja, o dependente também é cliente, 
 imprima o cpf e nome deste */
-select d.nome 
-from dependente d 
+select d.cpf_dependente, p.nome
+from dependente d join pessoa p on d.cpf_dependente = p.cpf
 where EXISTS
 (select rv.cpf_cliente
 from realiza_venda rv
-where d.cpf_dependente = cpf_cliente)
+where cpf_cliente = d.cpf_dependente)
 
 
 /* 57) Se existe um funcionario que realizou uma venda sendo um de seus dependentes como cliente, 
