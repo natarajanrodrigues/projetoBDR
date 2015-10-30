@@ -20,7 +20,7 @@ FOR EACH ROW
 EXECUTE PROCEDURE setIdadeDependente();
 
 
---2. Atualiza ao valor da compra ao adicionar um novo produto à tabel a Item_venda
+--2. Atualiza ao valor da compra ao adicionar um novo produto à tabela Item_venda
 CREATE OR REPLACE FUNCTION incrementaValorVenda() RETURNS TRIGGER
 AS'
   DECLARE
@@ -45,11 +45,11 @@ EXECUTE PROCEDURE incrementaValorVenda();
 */
 CREATE OR REPLACE FUNCTION finalizaVenda() RETURNS TRIGGER
 AS'
-  BEGIN
-     UPDATE Venda SET status=''Finalizada'' 
-     WHERE id=NEW.id_venda;
-     RETURN NEW;
-  END'
+  	BEGIN
+     	UPDATE Venda SET status=''Finalizada'' 
+     	WHERE id=NEW.id_venda;
+     	RETURN NEW;
+  	END'
 LANGUAGE plpgsql;
 
 
@@ -82,3 +82,38 @@ CREATE TRIGGER TriggerSetSalarioFamilia
 AFTER INSERT ON Dependente
 FOR EACH ROW
 EXECUTE PROCEDURE setSalarioFamilia();
+
+
+
+
+/* 5. seta atualiza a pontuacao do cliente assim que uma é adicionado um novo "realiza_venda".
+*/
+CREATE OR REPLACE FUNCTION calculaPontos() RETURNS TRIGGER
+AS'
+	DECLARE
+        pontosAnteriores INT;
+        soma_compra double precision;
+        pontosNovaVenda INT;
+
+
+  	BEGIN
+  		SELECT INTO pontosAnteriores c.pontuacao
+  		FROM Cliente c WHERE c.cpf_pessoa = NEW.cpf_cliente;
+
+  		SELECT INTO soma_compra sum(v.valor)
+  		FROM Venda v join realiza_venda rv on v.id = rv.id_venda
+  		WHERE rv.cpf_cliente = NEW.cpf_cliente;
+
+  		pontosNovaVenda := round(soma_compra / 100);
+
+     	UPDATE CLIENTE SET pontuacao=pontosAnteriores + pontosNovaVenda
+     	WHERE cpf_pessoa=NEW.cpf_cliente;
+     	RETURN NEW;
+  	END'
+LANGUAGE plpgsql;
+
+
+CREATE TRIGGER TriggerCalculaPontos
+AFTER INSERT ON Realiza_Venda
+FOR EACH ROW 
+EXECUTE PROCEDURE calculaPontos();
