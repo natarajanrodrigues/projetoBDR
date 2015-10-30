@@ -340,6 +340,25 @@ from realiza_venda rv
 where d.cpf_dependente = cpf_cliente)
 
 
+/* 11) Se existe um funcionario que realizou uma venda sendo um de seus dependentes como cliente, 
+imprima o cpf deste funcionario   */
+select f.cpf_pessoa as cpf_do_funcionario
+from funcionario f 
+where EXISTS
+(
+select 
+from realiza_venda rv join dependente d on rv.cpf_cliente = d.cpf_dependente
+where rv.cpf_funcionario = f.cpf_pessoa
+)
+
+
+
+
+
+
+
+
+
 
 
 
