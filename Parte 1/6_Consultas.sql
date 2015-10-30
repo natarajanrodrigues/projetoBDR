@@ -111,6 +111,11 @@ as f(matricula_funcionario,nome) NATURAL JOIN Dependente d
 GROUP BY f.nome
 ORDER BY qt_dependentes DESC LIMIT 1
 
+--19b. Funcionário(s) com mais dependentes - computando os funcionarios com mesmo numero de dependentes.
+SELECT funcionario, num_dependentes
+FROM funcionarioQtDependentes
+WHERE num_dependentes = (select max(num_dependentes) from funcionarioQtDependentes)
+
 --20. Qual "Cargo" tem mais pessoas *funcaoPessoa É UMA VIEW*
 SELECT f.funcao, COUNT(funcao) qtde FROM funcaoPessoa f
 GROUP BY f.funcao ORDER BY qtde DESC LIMIT 1

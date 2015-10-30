@@ -121,3 +121,26 @@ AS '
 LANGUAGE plpgsql;
 
 
+
+-- 7. calcula valor total de das vendas um funcionario num determinado mes
+CREATE OR REPLACE FUNCTION vendasMesPorFuncionario(VARCHAR, INTEGER)
+RETURNS FLOAT
+AS'
+    DECLARE
+
+        vendas_mes DOUBLE PRECISION := 0;
+        matricula_funcionario ALIAS FOR $1;
+        mes ALIAS FOR $2;
+
+    BEGIN
+
+      SELECT INTO vendas_mes sum(valor)
+      FROM Realiza_venda rv join Venda v on rv.id_venda=v.id 
+        natural join funcionario f (cpf_funcionario,matricula,salario_base,salario_familia)
+      WHERE f.matricula=matricula_funcionario and extract(month from rv.data::timestamp) = mes::double precision;
+      
+      
+      RETURN vendas_mes;
+      
+    END'
+LANGUAGE plpgsql;

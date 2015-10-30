@@ -39,3 +39,13 @@ SELECT DISTINCT q.id,q.nome,q.vendas*iv.quantidade unidades_vendidas
 FROM (SELECT p.id,p.nome,COUNT(*)vendas 
 	FROM Produto p JOIN Item_Venda iv ON p.id = iv.id_produto GROUP BY p.id) AS q
 JOIN Item_Venda iv ON q.id = iv.id_produto ORDER BY unidades_vendidas DESC;
+
+
+--6. funcionario e quantidade de dependentes
+CREATE VIEW funcionarioQtDependentes AS
+SELECT f.nome as funcionario, count(*) num_dependentes
+FROM (SELECT matricula,nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa) 
+as f(matricula_funcionario,nome) NATURAL JOIN Dependente d 
+GROUP BY f.nome
+
+
