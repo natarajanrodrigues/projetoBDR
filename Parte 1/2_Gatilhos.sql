@@ -6,7 +6,7 @@ AS'
         auxIdade INTEGER;
         data DATE;
    BEGIN
-        SELECT INTO auxIdade calcula_idade(DATA_NASCIMENTO) 
+        SELECT INTO auxIdade calcula_idade(p.DATA_NASCIMENTO) 
         FROM Pessoa p WHERE NEW.cpf_dependente = p.cpf;
         UPDATE Dependente SET idade=auxIdade WHERE cpf_dependente = NEW.cpf_dependente;
         RETURN NEW;
@@ -58,3 +58,27 @@ AFTER INSERT ON Realiza_Venda
 FOR EACH ROW 
 EXECUTE PROCEDURE finalizaVenda();
 
+
+
+--4. Ao adicionar um dependente, automaticamente calcula o salário família do funcionario
+CREATE OR REPLACE FUNCTION setSalarioFamilia()
+RETURNS TRIGGER
+AS'
+   DECLARE
+        qntDependentes INTEGER;
+        vlr_por_dependente DOUBLE PRECISION := 100;
+   BEGIN
+        SELECT INTO qntDependentes count(*)
+        FROM Dependente d WHERE d.matricula_funcionario = NEW.matricula_funcionario;
+        
+        UPDATE Funcionario SET salario_familia=qntDependentes*vlr_por_dependente 
+        WHERE matricula = NEW.matricula_funcionario;
+        RETURN NEW;
+   END'
+LANGUAGE plpgsql;
+
+
+CREATE TRIGGER TriggerSetSalarioFamilia
+AFTER INSERT ON Dependente
+FOR EACH ROW
+EXECUTE PROCEDURE setSalarioFamilia();
