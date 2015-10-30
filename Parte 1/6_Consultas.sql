@@ -164,9 +164,9 @@ WHERE f.nome ILIKE 'ASUS';
 --32. Clientes que compraram mais de um produto numa mesma compra
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 JOIN Venda v ON rv.id_venda = v.id JOIN Item_Venda iv ON iv.id_venda = v.id
-WHERE iv.quantidade>1
+WHERE iv.quantidade > 1
 
---33. Clientes que efetuaram uma compra dividido em 12x
+--33. Clientes que efetuaram uma compra dividido em 10x
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 JOIN Venda v ON rv.id_venda = v.id JOIN Forma_Pagamento fp ON fp.id = v.id_formaPagamento
 WHERE num_parcelas=10;
