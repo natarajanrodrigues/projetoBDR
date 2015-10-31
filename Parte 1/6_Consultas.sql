@@ -183,9 +183,10 @@ UPDATE FUNCIONARIO f SET salario_Base=salario_Base-100 WHERE cpf_pessoa NOT IN
 (SELECT rv.cpf_funcionario FROM Realiza_Venda rv);
 
 --33. dar desconto de 10% no valor total da compra de um cliente que tiver comprado mais de 1 produto da motorola
-UPDATE valor=valor*0.85 FROM Venda JOIN Item_Venda iv ON id = iv.id_venda
+UPDATE Venda SET valor=valor*0.90 WHERE id
+IN (SELECT v.id FROM Venda v JOIN Item_Venda iv ON v.id = iv.id_venda
 JOIN Produto p ON iv.id_produto = p.id JOIN Fornecedor f ON p.cnpj_fornecedor = f.cnpj
-WHERE f.nome ILIKE 'MOTOROLA';
+WHERE f.nome ILIKE 'MOTOROLA')
 
 --34. Funcionario que vendeu mais de 2 produtos em um único dia
 SELECT p.nome, SUM(iv.quantidade)
