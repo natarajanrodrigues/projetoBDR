@@ -35,11 +35,9 @@ SELECT COUNT(DISTINCT p.cidade) tipos_cidades
 FROM Pessoa p JOIN Cliente c ON p.cpf = c.cpf_pessoa
 
 --7. Exibir lucro por forma de pagamento
-SELECT fp.tipo formaPagamento, SUM(iv.quantidade * p.preco) valor_total
-FROM Forma_Pagamento fp JOIN Venda v ON fp.id = v.id_formaPagamento
-JOIN Item_venda iv ON iv.id_venda = v.id 
-JOIN Produto p ON iv.id_produto = p.id
-GROUP BY fp.id
+SELECT fp.tipo formaPagamento, SUM(v.valor) valor_total
+FROM Forma_Pagamento fp JOIN Venda v ON fp.id = v.id_formapagamento
+GROUP BY fp.tipo
 
 --8. Clientes que compraram por cartão
 SELECT p.nome 
@@ -94,15 +92,15 @@ WHERE c.email ILIKE '%GMAIL%'
 
 --18. Funcionario que ganha mais (usa NATURAL JOIN) *ps.: já considerando a remorção do atributo COMISSAO*
 SELECT p.nome, (f.salario_base + f.salario_familia) salarioTotal 
-FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia)
+FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,comissao,salario_familia)
 ORDER BY salarioTotal DESC
 LIMIT 1
 
 -- 18.b Mesma consulta. Leva em consideração mais de 1 funcionário que recebam o valor máximo
 SELECT p.nome, (f.salario_base + f.salario_familia) salarioTotal 
-FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia)
+FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,comissao,salario_familia)
 WHERE F.SALARIO_BASE + F.SALARIO_FAMILIA = ALL  (
-select max(f.salario_base + f.salario_familia) FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia))
+select max(f.salario_base + f.salario_familia) FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,comissao,salario_familia))
 
 --19. Funcionário com mais dependentes (usando NATURAL JOIN)
 SELECT f.nome as funcionario, COUNT(*) as qt_dependentes 
@@ -204,13 +202,10 @@ JOIN Produto pr ON iv.id_produto = pr.id
 WHERE pe.sexo='F'
 
 --36. Cliente que mais consumiu na loja
-SELECT pe.nome, sum(iv.quantidade*pr.preco) consumo_total
-FROM Pessoa pe JOIN Cliente c ON pe.cpf = c.cpf_pessoa
-JOIN realiza_venda rv ON c.cpf_pessoa = rv.cpf_cliente
+SELECT p.nome, sum(v.valor) consumo_total
+FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 JOIN Venda v ON rv.id_venda = v.id
-JOIN Item_venda iv ON v.id = iv.id_venda
-JOIN Produto pr ON iv.id_produto = pr.id
-GROUP BY pe.cpf ORDER BY consumo_total DESC LIMIT 1
+GROUP BY p.nome ORDER BY consumo_total DESC LIMIT 1
 
 --37. media dos preços dos produtos fornecidos pela Motorola
 SELECT avg(p.preco) media_preco
@@ -228,9 +223,9 @@ WHERE p.estoque = (SELECT MAX(estoque) FROM Produto)
 SELECT nome, SUM(preco*estoque) FROM Produto
 GROUP BY id
 
---41. Funcionarios que contenham a letra M em seu nome
+--41. Funcionarios que comece com a letra 'M'
 SELECT p.nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa
-WHERE p.nome ILIKE '%M%';
+WHERE p.nome ILIKE 'M%';
 
 --42. Exibir ranking dos items mais presentes nas vendas
 SELECT p.nome, SUM(iv.quantidade) quantidade FROM Produto p JOIN Item_venda iv ON p.id = iv.id_produto
