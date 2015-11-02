@@ -92,7 +92,7 @@ WHERE c.email ILIKE '%GMAIL%'
 
 --18. Funcionario que ganha mais (usa NATURAL JOIN) *ps.: já considerando a remorção do atributo COMISSAO*
 SELECT p.nome, (f.salario_base + f.salario_familia) salarioTotal 
-FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,comissao,salario_familia)
+FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia)
 ORDER BY salarioTotal DESC
 LIMIT 1
 
