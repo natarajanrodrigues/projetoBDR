@@ -46,6 +46,6 @@ CREATE VIEW funcionarioQtDependentes AS
 SELECT f.nome as funcionario, count(*) num_dependentes
 FROM (SELECT matricula,nome FROM Pessoa p JOIN Funcionario f ON p.cpf = f.cpf_pessoa) 
 as f(matricula_funcionario,nome) NATURAL JOIN Dependente d 
-GROUP BY f.nome
+GROUP BY f.nome;
 
 
