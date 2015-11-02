@@ -98,9 +98,9 @@ LIMIT 1
 
 -- 18.b Mesma consulta. Leva em consideração mais de 1 funcionário que recebam o valor máximo
 SELECT p.nome, (f.salario_base + f.salario_familia) salarioTotal 
-FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,comissao,salario_familia)
+FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia)
 WHERE F.SALARIO_BASE + F.SALARIO_FAMILIA = ALL  (
-select max(f.salario_base + f.salario_familia) FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,comissao,salario_familia))
+select max(f.salario_base + f.salario_familia) FROM Pessoa p NATURAL JOIN Funcionario f(cpf,matricula,salario_base,salario_familia))
 
 --19. Funcionário com mais dependentes (usando NATURAL JOIN)
 SELECT f.nome as funcionario, COUNT(*) as qt_dependentes 
