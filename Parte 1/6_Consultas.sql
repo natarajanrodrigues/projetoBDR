@@ -146,11 +146,13 @@ GROUP BY d.id
 ORDER BY qtde_produtos ASC
 LIMIT 1
 
---26. Clientes que realizaram uma transacao no dia 19/10/15
+--26. Clientes que realizaram uma transacao no dia 15/10/15
+SET DATESTYLE TO 'SQL, DMY';
 SELECT p.nome cliente FROM Pessoa p JOIN Realiza_Venda rv ON p.cpf = rv.cpf_cliente
 WHERE rv.data='15/10/2015';
 
 --27. Clientes que realizaram uma transacao no dia 12/10/2015 (usando NATURAL JOIN)
+SET DATESTYLE TO 'SQL, DMY';
 SELECT p.nome cliente 
 FROM Pessoa p NATURAL JOIN Realiza_Venda rv(data,hora,cpf,cpf_funcionario,id_venda)
 WHERE rv.data='12/10/2015';
